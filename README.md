@@ -1,13 +1,14 @@
 <h1 align="center">Submissão para Rinha de Backend - Controle de Concorrência</h1>
 
-> **O repositório com o código-fonte está disponível [aqui](https://github.com/AlcivanLucas/Rinha-de-backend-2024-q1-NodeJS).**
+> **O repositório do evento está disponível [aqui](https://github.com/AlcivanLucas/rinha-de-backend-2024-q1).**
 
 - [**Node**](https://golang.org): Node.js
 - [**pgx**](https://github.com/jackc/pgx): PostgreSQL driver and toolkit
 - [**PostgreSQL**](https://www.postgresql.org): Banco de dados relacional
 - [**nginx**](https://nginx.org): Servidor HTTP e proxy reverso
-- [**Prisma ORM**](https://www.prisma.io/): Prisma ORM
+- [**Pg Driver**](https://www.npmjs.com/package/pg):PG driver native 
 - [**Zod Validation**](https://zod.dev/): Zod for Validation
+
   
 
 
