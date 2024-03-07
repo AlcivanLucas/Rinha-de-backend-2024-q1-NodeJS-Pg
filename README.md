@@ -28,9 +28,8 @@ $ docker-compose up
 
 ## Resultados
 
-** Resultados Prévio teste beta prisma 26/02
-![Gráfico Resultados Gatling](./github/graficoresults.png)
-![Tabela resultados Gatling](./github/tabelaresukts.png)
+
+![Gráfico Resultados Gatling](./github/testegatling.png)
 
 
 

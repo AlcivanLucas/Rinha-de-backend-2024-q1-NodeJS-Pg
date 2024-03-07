@@ -6,7 +6,7 @@ import { query } from '../utils/pg-conf-db';
 import { pool } from '../utils/pg-conf-db';
 
 const app = express();
-require('dotenv').config();
+// require('dotenv').config();
 app.use(express.json());
 
 app.get('/clientes/:id/extrato', async (req: Request, res: Response) => {
@@ -24,31 +24,55 @@ app.get('/clientes/:id/extrato', async (req: Request, res: Response) => {
                 LEFT JOIN transacoes t ON c.id = t.cliente_id
                 WHERE c.id = $1
                 ORDER BY t.realizada_em DESC
-                LIMIT 11
+                LIMIT 10
             `, [clienteId]);
 
             // Separando o saldo e as transações
             const saldo = result[0];
-            const ultimas_transacoes = result.slice(1).map((transacao: { valor: any; tipo: any; descricao: any; realizada_em: any; }) => ({
+
+            // Verifica se existem transações para o cliente
+            const ultimas_transacoes = result.slice(0).map((transacao: { valor: number; tipo: any; descricao: string; realizada_em: any; }) => ({
                 valor: transacao.valor,
                 tipo: transacao.tipo,
                 descricao: transacao.descricao,
                 realizada_em: transacao.realizada_em
             }));
 
+            // Verifica se todas as transações estão vazias
+            const todasTransacoesVazias = ultimas_transacoes.every((transacao: { valor: null; tipo: null; descricao: null; realizada_em: null; }) => (
+            transacao.valor === null &&
+            transacao.tipo === null &&
+            transacao.descricao === null &&
+            transacao.realizada_em === null
+            ));
+
+            // Se todas as transações estiverem vazias, retorna um array vazio
+            if (todasTransacoesVazias) {
             res.status(200).json({
                 saldo: {
                     total: saldo.saldo,
                     data_extrato: data_extrato,
                     limite: saldo.limite,
                 },
-                ultimas_transacoes,
+                ultimas_transacoes: []
             });
+            } else {
+            res.status(200).json({
+                saldo: {
+                    total: saldo.saldo,
+                    data_extrato: data_extrato,
+                    limite: saldo.limite,
+                },
+                ultimas_transacoes
+            });
+            }
         } else {
+            statuscode = 404;
             // Caso contrário, lançamos um erro com status 400 (Bad Request)
             res.status(404).send('ID de cliente inválido');
         }
     } catch (error) {
+        statuscode = 404;
         console.error(error);
         res.status(404).json({ error: 'deu erro em alguma coisa dentro do try' });
     } finally {

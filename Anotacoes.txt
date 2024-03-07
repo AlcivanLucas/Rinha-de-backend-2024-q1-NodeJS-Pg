@@ -37,11 +37,10 @@ exec  : vamos executar comando dentro de um conteiner qu esta rodando
 uroot : 
 
 
-
 --------COMANDOS DB PostgreSQL--------------------
-docker exec -it rinha-de-backend-2024-q1-nodejs-pg-db-1 psql -U admin -d rinha -c "SELECT * FROM clientes;"
-docker exec -it rinha-de-backend-2024-q1-nodejs-pg-db-1 psql -U admin -d rinha -c "DELETE FROM transacoes WHERE cliente_id BETWEEN 1 AND 5;"
-docker exec -it rinha-de-backend-2024-q1-nodejs-pg-db-1 psql -U admin -d rinha -c "UPDATE clientes SET saldo = 0  WHERE id BETWEEN 1 AND 5;"
+docker exec -it rinha-de-backend-2024-q1-typescript-pg-db-1 psql -U admin -d rinha -c "SELECT * FROM clientes;"
+docker exec -it rinha-de-backend-2024-q1-typescript-pg-db-1 psql -U admin -d rinha -c "DELETE FROM transacoes WHERE cliente_id BETWEEN 1 AND 5;"
+docker exec -it rinha-de-backend-2024-q1-typescript-pg-db-1 psql -U admin -d rinha -c "UPDATE clientes SET saldo = 0  WHERE id BETWEEN 1 AND 5;"
 docker exec -it postgres-conteiner /bin/bash
 -it : significa que vamos usar o terminal bash 
 docker exec -it alcivanlucas-db-1 psql -U admin -l : Isso irá listar todos os bancos de dados disponíveis
@@ -49,23 +48,22 @@ docker exec -it alcivanlucas-db-1 psql -U admin -d rinha : entra do conteiner do
 \dt : lista as tabelas do db rinha
 
 ------criando imagem docker--------
-docker build -t alcivanlucas/rinha-backend-2024-q1-nodejs:latest --no-cache .
-docker push alcivanlucas/rinha-backend-2024-q1-nodejs:latest
+docker build -t alcivanlucas/rinha-backend-2024-q1-typescript-pg:latest --no-cache .
+docker push alcivanlucas/rinha-backend-2024-q1-typescript-pg:latest
 docker run -p 8081:8080 rinha-backend-2024-q1-nodejs:latest : Mapear a porta 8080 do container para a porta 8081 do host. 
 
 docker ps -q lista todos os IDs de containers executando 
 docker stop $(docker ps -q) , encerra todos os container em execução
 
-
 descrição do repo nno hub.dockers
 Tecnologias: Node.js, Docker-compose, PostgreSQL, NGINX LinkedIn: alcivan-lucas
 alcivanlucas/rinha-backend-2024-q1-nodejs
-
 
 docker stop $(docker ps -q) && docker rm $(docker ps -a -q) : remmove e limpa
 docker rmi $(docker images -q)
 OBS: uso do host "localhost" na sua URL de conexão do banco de dados. Quando você usa "localhost" dentro do contêiner da API, ele se refere ao próprio contêiner, não ao contêiner do banco de dados.
 Em vez de usar "localhost", você deve usar o nome do serviço do contêiner do banco de dados conforme definido no docker-compose.yml. Nesse caso, o nome do serviço é "db".
+docker push alcivanlucas/rinha-backend-2024-q1-typescript-pg:latest:latest
 
 docker system prune --volumes 
 WARNING! This will remove:
@@ -87,3 +85,35 @@ WARNING! This will remove:
 
 
 
+antigo postgres.conf:
+# # postgresql.conf
+
+# # Configurações gerais
+# max_connections = 100 # Limita o número de conexões simultâneas
+# shared_buffers = 16MB # Reduz o tamanho do buffer compartilhado para economizar memória
+# work_mem = 4MB # Reduz o tamanho da memória de trabalho para operações de classificação e ordenação
+# maintenance_work_mem = 32MB # Reduz o tamanho da memória para operações de manutenção
+# effective_cache_size = 100MB # Estima o tamanho da cache do sistema para otimizar consultas
+
+# # Configurações de conexão
+# listen_addresses = '*' # Permite conexões de qualquer endereço IP
+# port = 5432 # Porta padrão do PostgreSQL
+
+# # Configurações de segurança
+# ssl = off # Desativa SSL para simplificar a configuração
+
+# # Configurações de log
+# log_destination = 'stderr' # Redireciona logs para stderr
+# logging_collector = on # Habilita o coletor de logs
+# log_directory = 'pg_log' # Diretório para logs
+# log_filename = 'postgresql-%Y-%m-%d_%H%M%S.log' # Nome do arquivo de log
+# log_rotation_age = 1d # Rotaciona logs diariamente
+# log_rotation_size = 10MB # Rotaciona logs quando atingir 10MB
+# log_truncate_on_rotation = on # Trunca logs ao rotacioná-los
+# log_min_duration_statement = 100 # Loga consultas que demoram mais de 100ms
+
+# # Configurações de desempenho
+# random_page_cost = 1.1 # Ajusta o custo de acesso a páginas aleatórias
+# cpu_tuple_cost = 0.01 # Ajusta o custo de processamento de tuplas
+# cpu_index_tuple_cost = 0.005 # Ajusta o custo de processamento de índices
+# cpu_operator_cost = 0.0025 # Ajusta o custo de operadores
